@@ -54,7 +54,9 @@ ROOT_URLCONF = 'explorer.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,6 +71,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'explorer.wsgi.application'
 
+MONZO_CLIENT_KEY = os.environ.get('MONZO_CLIENT_KEY')
+MONZO_SECRET_KEY = os.environ.get('MONZO_SECRET_KEY')
+MONZO_REDIRECT_URL = os.environ.get('MONZO_REDIRECT_URL')
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases

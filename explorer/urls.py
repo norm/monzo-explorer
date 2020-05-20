@@ -16,6 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from explorer.views import Callback, Home
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    path('', Home.as_view(), name='homepage'),
+    path('callback', Callback.as_view(), name='callback'),
 ]

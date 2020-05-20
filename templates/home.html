@@ -1,0 +1,16 @@
+{% extends "base_template.html" %}
+
+{% block body %}
+
+  {% if authenticated %}
+
+    <h1>authenticated</h1>
+
+  {% else %}
+
+    <h1>not authenticated</h1>
+    <p><a href='{{oauth_url}}'>Authorise this app with Monzo</a></p>
+
+  {% endif %}
+
+{% endblock body %}
