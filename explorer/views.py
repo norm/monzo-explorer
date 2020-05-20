@@ -12,6 +12,7 @@ from explorer.settings import (
     MONZO_SECRET_KEY,
     MONZO_REDIRECT_URL,
 )
+from apps.monzo.models import Transaction
 
 
 class Home(TemplateView):
@@ -21,6 +22,7 @@ class Home(TemplateView):
         context = super().get_context_data(**kwargs)
         if os.path.isfile('monzo.json'):
             context['authenticated'] = True
+            context['recent_transactions'] = Transaction.objects.all()
         else:
             context['authenticated'] = False
             oauth_client = MonzoOAuth2Client(

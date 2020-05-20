@@ -41,3 +41,20 @@ Run the app with `honcho start`, and open `http://localhost:8669` in your
 browser. Click "Authenticate with Monzo" if this is the first time using it.
 Allow the app to use your data by approving the request in the Monzo app
 on your phone.
+
+Initial data load
+-----------------
+
+Having authenticated, fetch all of your transaction data:
+
+    honcho run python mange.py fetch --all
+
+*Note:* you must do this within five minutes of approving the request in
+the app, or you will need to reauthenticate with Monzo.
+
+Subsequent data refresh
+-----------------------
+
+At any time, you can fetch the most recent transactions:
+
+    honcho run python manage.py fetch

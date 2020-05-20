@@ -6,6 +6,25 @@
 
     <h1>authenticated</h1>
 
+    {% if recent_transactions %}
+
+      <ul>
+        {% for transaction in recent_transactions|slice:":10" %}
+          <li>
+            {{transaction}}
+          </li>
+        {% endfor %}
+      </ul>
+
+    {% else %}
+
+      <p>
+        No transactions found.
+        Use the <code>fetch</code> management command (see README).
+      </p>
+
+    {% endif %}
+
   {% else %}
 
     <h1>not authenticated</h1>
