@@ -5,6 +5,8 @@ from monzo import Monzo, MonzoOAuth2Client
 
 from django.db import models
 from django.utils.timezone import make_aware
+from taggit.managers import TaggableManager
+from taggit.models import TaggedItemBase
 
 
 def text_to_timestamp(text):
@@ -89,6 +91,16 @@ class Transaction(models.Model):
     # amount_is_pending (doesn't seem reliable)
     # atm_fees_detailed (null)
 
+    user_note = models.CharField(
+        max_length = 1024,
+        null = True,
+        blank = True
+    )
+    user_tags = TaggableManager(
+        through = 'TaggedTransaction',
+        blank = True
+    )
+
     class Meta:
         ordering = ['-created']
 
@@ -170,6 +182,13 @@ class Transaction(models.Model):
             self.amount / 100,
             self.description,
         )
+
+
+class TaggedTransaction(TaggedItemBase):
+    content_object = models.ForeignKey(
+        'Transaction',
+        on_delete=models.CASCADE,
+    )
 
 
 class Merchant(models.Model):
