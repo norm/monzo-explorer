@@ -135,7 +135,7 @@ class Transaction(models.Model):
                 if created:
                     total_created += 1
 
-            print('%s fetched, %s updated' % (total_fetched, total_created))
+            print('%s updated, %s new' % (total_fetched, total_created))
 
     @classmethod
     def update_from_monzo_data(cls, transaction):
@@ -170,7 +170,7 @@ class Transaction(models.Model):
 
         return cls.objects.update_or_create(
             id=transaction['id'],
-            defaults = update
+            defaults = update,
         )
 
     def __str__(self):
