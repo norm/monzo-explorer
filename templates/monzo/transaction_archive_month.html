@@ -1,0 +1,85 @@
+{% extends "base_template.html" %}
+{% load currency %}
+
+{% block body %}
+  <h1>YEAR/MONTH</h1>
+
+  <div id='transactions_summary'>
+    <h2>Summary</h2>
+
+    <dl>
+      <dt>Income</dt>
+      <dd class='income'>£{{transactions_summary.total_in|currency}}</dd>
+      <dt>Total outgoings</dt>
+      <dd class='outgoings'>£{{transactions_summary.total_out|currency}}</dd>
+
+      {% for category,value in transactions_summary.categorised.items %}
+        <dt>Category {{category}}</dt>
+        <dd>£{{value|currency}}</dd>
+      {% endfor %}
+
+      {% for tag,value in transactions_summary.tagged.items %}
+        <dt>Tagged {{tag}}</dt>
+        <dd>£{{value|currency}}</dd>
+      {% endfor %}
+
+
+      <dt>{{transactions_summary.declined}} declined transactions</dt>
+    </dl>
+  </div>
+
+  <p>
+    {% if previous_month %}
+      <a href='{% url "transactions_month" previous_month|date:"Y" previous_month|date:"m" %}'>
+        Previous Month: {{ previous_month|date:"F Y" }}
+      </a><br>
+    {% endif %}
+    {% if next_month %}
+      <a href='{% url "transactions_month" next_month|date:"Y" next_month|date:"m" %}'>
+        Next Month: {{ next_month|date:"F Y" }}
+      </a>
+    {% endif %}
+  </p>
+
+  <div class='controls'>
+  </div>
+
+  <ul class='transactions'>
+    {% for object in object_list %}
+      <li class='{% if object.declined %}declined{% endif %}'>
+        {{object}}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <script>
+    $(function() {
+      var cookie = getCookie('transactions');
+      var $button = $('<button>Hide declined transactions</button>');
+
+      if (cookie == 'hide') {
+        $('ul.transactions li.declined').hide();
+        $button.text('Show declined transactions');
+      }
+
+      $('div.controls').append($button);
+
+      $button.click(function() {
+        if (cookie == 'hide') {
+          $('ul.transactions li.declined').slideToggle();
+          setCookie('transactions', 'show', 31);
+          cookie = 'show';
+          $button.text('Hide declined transactions');
+        }
+        else {
+          $('ul.transactions li.declined').slideToggle()
+          setCookie('transactions', 'hide', 31);
+          cookie = 'hide';
+          $button.text('Show declined transactions');
+      }
+      });
+    });
+
+  </script>
+
+{% endblock body %}

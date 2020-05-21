@@ -3,6 +3,40 @@
   <meta charset='UTF-8'>
   <title>{% block head_title_tag %}SET PAGE TITLE{% endblock %}</title>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <style>
+    #transactions_summary dt {
+        font-weight: bold;
+        float: left;
+        clear: left;
+        min-width: 200px;
+        padding-right: 20px;
+        clear: both;
+    }
+    #transactions_summary::after {
+      content: '';
+      clear: both;
+      display: table;
+    }
+    #transactions_summary dd.outgoings {
+      padding-bottom: 1em;
+    }
+    ul.transactions li.declined {
+        font-style: italic;
+    }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    function setCookie(key, value, expiry) {
+        var expires = new Date();
+        expires.setTime(expires.getTime() + (expiry * 24 * 60 * 60 * 1000));
+        document.cookie = key + '=' + value + ';path=/;expires=' + expires.toUTCString();
+    }
+
+    function getCookie(key) {
+        var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+        return keyValue ? keyValue[2] : null;
+    }
+  </script>
 </head>
 <body>
 

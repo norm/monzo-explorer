@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 from explorer.views import Callback, Home
+from apps.monzo.views import TransactionsMonthView
 
 
 urlpatterns = [
@@ -24,4 +25,10 @@ urlpatterns = [
 
     path('', Home.as_view(), name='homepage'),
     path('callback', Callback.as_view(), name='callback'),
+
+    path(
+        '<int:year>/<int:month>/',
+        TransactionsMonthView.as_view(month_format='%m'),
+        name='transactions_month',
+    )
 ]
