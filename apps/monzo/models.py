@@ -70,6 +70,7 @@ class Transaction(models.Model):
     )
     card_check = models.BooleanField(default = False)
     scheme = models.CharField(max_length = 64)
+    include_in_spending = models.BooleanField(default = True)
 
     # metadata ...
     # labels (always null)
@@ -83,7 +84,6 @@ class Transaction(models.Model):
     # counterparty ...
     # dedupe_id (used by transactions for safe retries)
     # originator (did I do it)
-    # include_in_spending (don't care)
     # can_be_excluded_from_breakdown (don't care)
     # can_be_made_subscription (don't care)
     # can_split_the_bill (don't care)
@@ -148,6 +148,7 @@ class Transaction(models.Model):
             'local_currency': transaction['local_currency'],
             'updated': text_to_timestamp(transaction['updated']),
             'scheme': transaction['scheme'],
+            'include_in_spending': transaction['include_in_spending'],
         }
 
         if transaction['merchant'] is not None:
