@@ -148,6 +148,7 @@ class Transaction(models.Model):
             'local_currency': transaction['local_currency'],
             'updated': text_to_timestamp(transaction['updated']),
             'scheme': transaction['scheme'],
+            'category': transaction['category'],
             'include_in_spending': transaction['include_in_spending'],
         }
 
