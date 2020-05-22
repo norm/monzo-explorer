@@ -1,5 +1,6 @@
 from django.views.generic import (
     DetailView,
+    UpdateView,
     MonthArchiveView,
 )
 
@@ -50,6 +51,18 @@ class TransactionsMonthView(SummarisedTransactionsMixin, MonthArchiveView):
 
 class TransactionView(DetailView):
     model = Transaction
+
+
+class TransactionNoteUpdate(UpdateView):
+    model = Transaction
+    fields = ['user_note']
+    template_name = 'monzo/transaction_note_form.html'
+
+
+class TransactionTagsUpdate(UpdateView):
+    model = Transaction
+    fields = ['user_tags']
+    template_name = 'monzo/transaction_tags_form.html'
 
 
 class MerchantView(DetailView):

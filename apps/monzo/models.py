@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 from monzo import Monzo, MonzoOAuth2Client
 
 from django.db import models
+from django.urls import reverse
 from django.utils.timezone import make_aware
 from taggit.managers import TaggableManager
 from taggit.models import TaggedItemBase
@@ -203,6 +204,9 @@ class Transaction(models.Model):
             self.amount / 100,
             self.description,
         )
+
+    def get_absolute_url(self):
+        return reverse('transaction', kwargs={'pk': self.id})
 
 
 class TaggedTransaction(TaggedItemBase):

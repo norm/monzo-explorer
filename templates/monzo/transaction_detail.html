@@ -30,9 +30,22 @@
     <dt>scheme</dt><dd>{{object.scheme}}</dd>
     <dt>include_in_spending</dt><dd>{{object.include_in_spending}}</dd>
     <dt>user_note</dt>
-    <dd>{{object.user_note}}</dd>
+    <dd>
+      <form method='post' action='{% url "transaction_note" object.id %}'>
+        {% csrf_token %}
+        <input type='text' name='user_note'
+          value='{{object.user_note|default_if_none:""}}'>
+        <input type='submit'>
+      </form>
+    </dd>
     <dt>user_tags</dt>
-    <dd>{{object.user_tags.all|join:" "}}</dd>
+    <dd>
+      <form method='post' action='{% url "transaction_tags" object.id %}'>
+        {% csrf_token %}
+        <input type='text' name='user_tags' value='{{object.user_tags.all|join:" "}}'>
+        <input type='submit'>
+      </form>
+    </dd>
     {% if object.merchant %}
       <dt>merchant_tags</dt>
       <dd>{{object.merchant.user_tags.all|join:" "}}</dd>

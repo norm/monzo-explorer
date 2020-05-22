@@ -20,6 +20,8 @@ from explorer.views import Callback, Home
 from apps.monzo.views import (
     MerchantView,
     TransactionView,
+    TransactionNoteUpdate,
+    TransactionTagsUpdate,
     TransactionsMonthView,
 )
 
@@ -39,6 +41,16 @@ urlpatterns = [
         'transactions/<str:pk>/',
         TransactionView.as_view(),
         name='transaction',
+    ),
+    path(
+        'transactions/<str:pk>/note',
+        TransactionNoteUpdate.as_view(),
+        name='transaction_note',
+    ),
+    path(
+        'transactions/<str:pk>/tags',
+        TransactionTagsUpdate.as_view(),
+        name='transaction_tags',
     ),
 
     path(
