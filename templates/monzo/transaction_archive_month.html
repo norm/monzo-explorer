@@ -65,27 +65,27 @@
   <script>
     $(function() {
       var cookie = getCookie('transactions');
-      var $button = $('<button>Hide declined transactions</button>');
+      var $declined = $('<button>Hide declined transactions</button>');
 
       if (cookie == 'hide') {
         $('ul.transactions li.declined').hide();
-        $button.text('Show declined transactions');
+        $declined.text('Show declined transactions');
       }
 
-      $('div.controls').append($button);
+      $('div.controls').append($declined);
 
-      $button.click(function() {
+      $declined.click(function() {
         if (cookie == 'hide') {
           $('ul.transactions li.declined').slideToggle();
           setCookie('transactions', 'show', 31);
           cookie = 'show';
-          $button.text('Hide declined transactions');
+          $declined.text('Hide declined transactions');
         }
         else {
           $('ul.transactions li.declined').slideToggle()
           setCookie('transactions', 'hide', 31);
           cookie = 'hide';
-          $button.text('Show declined transactions');
+          $declined.text('Show declined transactions');
       }
       });
     });
