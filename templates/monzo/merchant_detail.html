@@ -1,0 +1,25 @@
+{% extends "base_template.html" %}
+
+{% block body %}
+
+  <h1>{{object.id}}</h1>
+
+  <dl class='merchant'>
+    <dt>group_id</dt><dd>{{object.group_id}}</dd>
+    <dt>name</dt><dd>{{object.name}}</dd>
+    <dt>logo</dt>
+    <dd>
+      <img src='{{object.logo}}' alt=''>
+      {{object.logo}}
+    </dd>
+    <dt>address</dt><dd>{{object.address}}</dd>
+    <dt>postcode</dt><dd>{{object.postcode}}</dd>
+    <dt>latitude</dt><dd>{{object.latitude}}</dd>
+    <dt>longitude</dt><dd>{{object.longitude}}</dd>
+    <dt>twitter_id</dt><dd>{{object.twitter_id}}</dd>
+    <dt>foursquare_id</dt><dd>{{object.foursquare_id}}</dd>
+    <dt>user_tags</dt>
+    <dd>{{object.user_tags.all|join:" "}}</dd>
+  </dl>
+
+{% endblock body %}

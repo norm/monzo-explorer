@@ -9,7 +9,14 @@
     <dt>Description</dt><dd>{{object.description}}</dd>
     <dt>amount</dt><dd>{{object.amount}}</dd>
     <dt>currency</dt><dd>{{object.currency}}</dd>
-    <dt>merchant</dt><dd>{{object.merchant}}</dd>
+    <dt>merchant</dt>
+    <dd>
+      {% if object.merchant %}
+      <a href='{% url "merchant" object.merchant.id %}'>
+        {{object.merchant}}
+      </a>
+      {% endif %}
+    </dd>
     <dt>notes</dt><dd>{{object.notes}}</dd>
     <dt>category</dt><dd>{{object.category}}</dd>
     <dt>settled</dt><dd>{{object.settled}}</dd>

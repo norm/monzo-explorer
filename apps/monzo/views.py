@@ -3,7 +3,7 @@ from django.views.generic import (
     MonthArchiveView,
 )
 
-from apps.monzo.models import Transaction
+from apps.monzo.models import Merchant, Transaction
 
 
 class SummarisedTransactionsMixin:
@@ -50,3 +50,7 @@ class TransactionsMonthView(SummarisedTransactionsMixin, MonthArchiveView):
 
 class TransactionView(DetailView):
     model = Transaction
+
+
+class MerchantView(DetailView):
+    model = Merchant
