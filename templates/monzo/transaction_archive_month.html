@@ -47,7 +47,9 @@
   <ul class='transactions'>
     {% for object in object_list %}
       <li class='{% if object.declined %}declined{% endif %} {% if object.outgoing and object.untagged %}untagged{% endif %}'>
-        {{object}}
+        <a href='{{object.get_absolute_url}}'>
+          {{object}}
+        </a>
         <strong class='tags'>
           {% for tag in object.tags %}
             {{tag}}

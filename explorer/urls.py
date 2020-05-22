@@ -17,7 +17,10 @@ from django.contrib import admin
 from django.urls import path
 
 from explorer.views import Callback, Home
-from apps.monzo.views import TransactionsMonthView
+from apps.monzo.views import (
+    TransactionView,
+    TransactionsMonthView,
+)
 
 
 urlpatterns = [
@@ -30,5 +33,10 @@ urlpatterns = [
         '<int:year>/<int:month>/',
         TransactionsMonthView.as_view(month_format='%m'),
         name='transactions_month',
-    )
+    ),
+    path(
+        'transactions/<str:pk>/',
+        TransactionView.as_view(),
+        name='transaction',
+    ),
 ]

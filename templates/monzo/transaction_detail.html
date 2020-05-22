@@ -1,0 +1,35 @@
+{% extends "base_template.html" %}
+
+{% block body %}
+
+  <h1>{{object.id}}</h1>
+
+  <dl class='transaction'>
+    <dt>Created</dt><dd>{{object.created}}</dd>
+    <dt>Description</dt><dd>{{object.description}}</dd>
+    <dt>amount</dt><dd>{{object.amount}}</dd>
+    <dt>currency</dt><dd>{{object.currency}}</dd>
+    <dt>merchant</dt><dd>{{object.merchant}}</dd>
+    <dt>notes</dt><dd>{{object.notes}}</dd>
+    <dt>category</dt><dd>{{object.category}}</dd>
+    <dt>settled</dt><dd>{{object.settled}}</dd>
+    <dt>local_amount</dt><dd>{{object.local_amount}}</dd>
+    <dt>local_currency</dt><dd>{{object.local_currency}}</dd>
+    <dt>updated</dt><dd>{{object.updated}}</dd>
+    {% if object.declined %}
+      <dt>declined</dt><dd>{{object.declined_reason}}</dd>
+    {% endif %}
+    <dt>card_check</dt><dd>{{object.card_check}}</dd>
+    <dt>scheme</dt><dd>{{object.scheme}}</dd>
+    <dt>include_in_spending</dt><dd>{{object.include_in_spending}}</dd>
+    <dt>user_note</dt>
+    <dd>{{object.user_note}}</dd>
+    <dt>user_tags</dt>
+    <dd>{{object.user_tags.all|join:" "}}</dd>
+    {% if object.merchant %}
+      <dt>merchant_tags</dt>
+      <dd>{{object.merchant.user_tags.all|join:" "}}</dd>
+    {% endif %}
+  </dl>
+
+{% endblock body %}

@@ -1,4 +1,7 @@
-from django.views.generic import MonthArchiveView
+from django.views.generic import (
+    DetailView,
+    MonthArchiveView,
+)
 
 from apps.monzo.models import Transaction
 
@@ -43,3 +46,7 @@ class TransactionsMonthView(SummarisedTransactionsMixin, MonthArchiveView):
         context['transactions_summary'] = self.summarise_transactions(
             context['object_list'])
         return context
+
+
+class TransactionView(DetailView):
+    model = Transaction
