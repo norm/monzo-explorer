@@ -73,3 +73,9 @@ class MerchantTagsUpdate(UpdateView):
     model = Merchant
     fields = ['user_tags']
     template_name = 'monzo/merchant_tags_form.html'
+
+    def get_success_url(self):
+        if 'success' in self.request.POST:
+            return self.request.POST['success']
+        return super().get_success_url()
+

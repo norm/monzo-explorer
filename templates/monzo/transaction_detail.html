@@ -48,7 +48,14 @@
     </dd>
     {% if object.merchant %}
       <dt>merchant_tags</dt>
-      <dd>{{object.merchant.user_tags.all|join:" "}}</dd>
+      <dd>
+        <form method='post' action='{% url "merchant_tags" object.merchant.id %}'>
+          {% csrf_token %}
+          <input type='hidden' name='success' value='{% url "transaction" object.id %}'>
+          <input type='text' name='user_tags' value='{{object.merchant.user_tags.all|join:" "}}'>
+          <input type='submit'>
+        </form>
+      </dd>
     {% endif %}
   </dl>
 
