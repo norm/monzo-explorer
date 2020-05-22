@@ -58,6 +58,17 @@
         {% if object.user_note %}
           <em>{{object.user_note}}</em>
         {% endif %}
+        <br>
+        <form method='post' action='{% url "transaction_reviewed" object.id %}'>
+          {% csrf_token %}
+          <input type='hidden' name='success' value='{% url "transactions_month" month|date:"Y" month|date:"m" %}'>
+          <label>Reviewed:
+            <input type="checkbox" name="user_reviewed"
+              {% if object.user_reviewed %}checked{% endif %}
+            >
+          </label>
+          <input type='submit'>
+        </form>
       </li>
     {% endfor %}
   </ul>
