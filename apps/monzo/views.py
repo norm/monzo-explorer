@@ -67,3 +67,9 @@ class TransactionTagsUpdate(UpdateView):
 
 class MerchantView(DetailView):
     model = Merchant
+
+
+class MerchantTagsUpdate(UpdateView):
+    model = Merchant
+    fields = ['user_tags']
+    template_name = 'monzo/merchant_tags_form.html'

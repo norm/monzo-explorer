@@ -19,7 +19,13 @@
     <dt>twitter_id</dt><dd>{{object.twitter_id}}</dd>
     <dt>foursquare_id</dt><dd>{{object.foursquare_id}}</dd>
     <dt>user_tags</dt>
-    <dd>{{object.user_tags.all|join:" "}}</dd>
+    <dd>
+      <form method='post' action='{% url "merchant_tags" object.id %}'>
+        {% csrf_token %}
+        <input type='text' name='user_tags' value='{{object.user_tags.all|join:" "}}'>
+        <input type='submit'>
+      </form>
+    </dd>
   </dl>
 
 {% endblock body %}

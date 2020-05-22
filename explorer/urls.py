@@ -19,6 +19,7 @@ from django.urls import path
 from explorer.views import Callback, Home
 from apps.monzo.views import (
     MerchantView,
+    MerchantTagsUpdate,
     TransactionView,
     TransactionNoteUpdate,
     TransactionTagsUpdate,
@@ -57,5 +58,10 @@ urlpatterns = [
         'merchants/<str:pk>/',
         MerchantView.as_view(),
         name='merchant',
+    ),
+    path(
+        'merchants/<str:pk>/tags',
+        MerchantTagsUpdate.as_view(),
+        name='merchant_tags',
     ),
 ]
