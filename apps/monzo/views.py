@@ -48,6 +48,15 @@ class TransactionsMonthView(SummarisedTransactionsMixin, MonthArchiveView):
             context['object_list'])
         return context
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.exclude(
+                # FIXME do this properly later (reconcile pot transfers)
+                scheme = 'uk_retail_pot'
+            ).exclude(
+                card_check = True
+            )
+
 
 class TransactionView(DetailView):
     model = Transaction
