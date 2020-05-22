@@ -73,6 +73,9 @@
     {% endfor %}
   </ul>
 
+{% endblock body %}
+
+{% block page_javascript %}
   <script>
     $(function() {
       // toggle declined transactions visibility; keeps state in a cookie
@@ -129,4 +132,4 @@
 
   </script>
 
-{% endblock body %}
+{% endblock page_javascript %}
