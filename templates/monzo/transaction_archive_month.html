@@ -1,8 +1,12 @@
 {% extends "base_template.html" %}
 {% load currency %}
 
+{% block head_title_tag %}
+Transactions for {{month|date:"F Y"}}
+{% endblock %}
+
 {% block body %}
-  <h1>YEAR/MONTH</h1>
+  <h1>{{month|date:"F Y"}}</h1>
 
   <div id='transactions_summary'>
     <h2>Summary</h2>
