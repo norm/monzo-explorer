@@ -1,4 +1,5 @@
 from django.forms import models as model_forms
+from django.http import JsonResponse
 from django.views.generic import (
     DetailView,
     UpdateView,
@@ -59,7 +60,23 @@ class TransactionsMonthView(SummarisedTransactionsMixin, MonthArchiveView):
             )
 
 
-class SingleFieldUpdateView(UpdateView):
+class AjaxResponseMixin:
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        if self.request.is_ajax():
+            return JsonResponse(form.errors, status=400)
+        else:
+            return response
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        if self.request.is_ajax():
+            return JsonResponse({'ok':True})
+        else:
+            return response
+
+
+class SingleFieldUpdateView(AjaxResponseMixin, UpdateView):
     template_name_suffix = 'update'
 
     def get_template_names(self):

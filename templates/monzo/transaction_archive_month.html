@@ -59,7 +59,7 @@
           <em>{{object.user_note}}</em>
         {% endif %}
         <br>
-        <form method='post' action='{% url "transaction_reviewed" object.id %}'>
+        <form method='post' action='{% url "transaction_reviewed" object.id %}' data-ajaxable='true'>
           {% csrf_token %}
           <input type='hidden' name='success' value='{% url "transactions_month" month|date:"Y" month|date:"m" %}'>
           <label>Reviewed:
@@ -75,6 +75,7 @@
 
   <script>
     $(function() {
+      // toggle declined transactions visibility; keeps state in a cookie
       var cookie = getCookie('transactions');
       var $declined = $('<button>Hide declined transactions</button>');
 
@@ -100,11 +101,30 @@
       }
       });
 
+      // toggle reviewed transactions visibility; transient effect
       var $reviewed = $('<button>Hide reviewed transactions</button>');
       $reviewed.on('click', function() {
         $('ul.transactions li:not(.unreviewed)').hide();
       });
       $('div.controls').append($reviewed);
+
+      // submit reviewed state changes with ajax
+      $('ul.transactions form[data-ajaxable]').each(function() {
+        var $this = $(this);
+        var $input = $('input[type=checkbox]', $this);
+        $input.on(
+          'change',
+          function(){
+            $this.submit()
+          }
+        );
+        $('[type=submit]', $this).hide();
+        $this.use_ajax_submit({
+          'success': function() {
+            $this.parent().toggleClass('unreviewed');
+          }
+        });
+      });
     });
 
   </script>
