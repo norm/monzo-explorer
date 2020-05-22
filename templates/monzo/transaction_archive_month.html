@@ -46,7 +46,7 @@
 
   <ul class='transactions'>
     {% for object in object_list %}
-      <li class='{% if object.declined %}declined{% endif %} {% if object.outgoing and object.untagged %}untagged{% endif %}'>
+      <li class='{% if object.declined %}declined{% endif %} {% if not object.user_reviewed %}unreviewed{% endif %}'>
         <a href='{{object.get_absolute_url}}'>
           {{object}}
         </a>

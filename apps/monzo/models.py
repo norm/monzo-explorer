@@ -101,6 +101,7 @@ class Transaction(models.Model):
         through = 'TaggedTransaction',
         blank = True
     )
+    user_reviewed = models.BooleanField(default = False)
 
     class Meta:
         ordering = ['-created']

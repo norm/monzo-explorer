@@ -46,6 +46,16 @@
         <input type='submit'>
       </form>
     </dd>
+    <dt>user_reviewed</dt>
+    <dd>
+      <form method='post' action='{% url "transaction_reviewed" object.id %}'>
+        {% csrf_token %}
+        <input type="checkbox" name="user_reviewed"
+          {% if object.user_reviewed %}checked{% endif %}
+        >
+        <input type='submit'>
+      </form>
+    </dt>
     {% if object.merchant %}
       <dt>merchant_tags</dt>
       <dd>

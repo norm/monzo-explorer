@@ -23,6 +23,7 @@ from apps.monzo.views import (
     TransactionView,
     TransactionNoteUpdate,
     TransactionTagsUpdate,
+    TransactionReviewedUpdate,
     TransactionsMonthView,
 )
 
@@ -52,6 +53,11 @@ urlpatterns = [
         'transactions/<str:pk>/tags',
         TransactionTagsUpdate.as_view(),
         name='transaction_tags',
+    ),
+    path(
+        'transactions/<str:pk>/reviewed',
+        TransactionReviewedUpdate.as_view(),
+        name='transaction_reviewed',
     ),
 
     path(

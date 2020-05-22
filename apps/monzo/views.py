@@ -95,6 +95,11 @@ class TransactionTagsUpdate(SingleFieldUpdateView):
     field = 'user_tags'
 
 
+class TransactionReviewedUpdate(SingleFieldUpdateView):
+    model = Transaction
+    field = 'user_reviewed'
+
+
 class MerchantView(DetailView):
     model = Merchant
 
