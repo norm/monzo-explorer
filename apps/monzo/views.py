@@ -1,3 +1,4 @@
+from django.forms import models as model_forms
 from django.views.generic import (
     DetailView,
     UpdateView,
@@ -58,33 +59,46 @@ class TransactionsMonthView(SummarisedTransactionsMixin, MonthArchiveView):
             )
 
 
-class TransactionView(DetailView):
-    model = Transaction
+class SingleFieldUpdateView(UpdateView):
+    template_name_suffix = 'update'
 
+    def get_template_names(self):
+        return [
+            "%s/%s_%s_%s.html" % (
+                self.model._meta.app_label,
+                self.model._meta.model_name,
+                self.field,
+                self.template_name_suffix,
+            ),
+        ]
 
-class TransactionNoteUpdate(UpdateView):
-    model = Transaction
-    fields = ['user_note']
-    template_name = 'monzo/transaction_note_form.html'
-
-
-class TransactionTagsUpdate(UpdateView):
-    model = Transaction
-    fields = ['user_tags']
-    template_name = 'monzo/transaction_tags_form.html'
-
-
-class MerchantView(DetailView):
-    model = Merchant
-
-
-class MerchantTagsUpdate(UpdateView):
-    model = Merchant
-    fields = ['user_tags']
-    template_name = 'monzo/merchant_tags_form.html'
+    def get_form_class(self):
+        return model_forms.modelform_factory(self.model, fields=[self.field])
 
     def get_success_url(self):
         if 'success' in self.request.POST:
             return self.request.POST['success']
         return super().get_success_url()
 
+
+class TransactionView(DetailView):
+    model = Transaction
+
+
+class TransactionNoteUpdate(SingleFieldUpdateView):
+    model = Transaction
+    field = 'user_note'
+
+
+class TransactionTagsUpdate(SingleFieldUpdateView):
+    model = Transaction
+    field = 'user_tags'
+
+
+class MerchantView(DetailView):
+    model = Merchant
+
+
+class MerchantTagsUpdate(SingleFieldUpdateView):
+    model = Merchant
+    field = 'user_tags'
