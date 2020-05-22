@@ -23,11 +23,11 @@ class SummarisedTransactionsMixin:
                         summary['categorised'][transaction.category] += (-1 * transaction.amount)
                     except KeyError:
                         summary['categorised'][transaction.category] = (-1 * transaction.amount)
-                for tag in transaction.user_tags.all():
-                    try:
-                        summary['tagged'][tag] += (-1 * transaction.amount)
-                    except KeyError:
-                        summary['tagged'][tag] = (-1 * transaction.amount)
+                    for tag in transaction.tags():
+                        try:
+                            summary['tagged'][tag] += (-1 * transaction.amount)
+                        except KeyError:
+                            summary['tagged'][tag] = (-1 * transaction.amount)
             else:
                 summary['total_in'] += transaction.amount
 

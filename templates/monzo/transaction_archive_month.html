@@ -46,8 +46,16 @@
 
   <ul class='transactions'>
     {% for object in object_list %}
-      <li class='{% if object.declined %}declined{% endif %}'>
+      <li class='{% if object.declined %}declined{% endif %} {% if object.outgoing and object.untagged %}untagged{% endif %}'>
         {{object}}
+        <strong class='tags'>
+          {% for tag in object.tags %}
+            {{tag}}
+          {% endfor %}
+        </strong>
+        {% if object.user_note %}
+          <em>{{object.user_note}}</em>
+        {% endif %}
       </li>
     {% endfor %}
   </ul>

@@ -173,6 +173,25 @@ class Transaction(models.Model):
             defaults = update,
         )
 
+    def tags(self):
+        tags = []
+        for tag in self.user_tags.all():
+            tags.append(tag)
+        if self.merchant:
+            for tag in self.merchant.user_tags.all():
+                tags.append(tag)
+        return tags
+
+    def untagged(self):
+        if not self.tags():
+            return True
+        return False
+
+    def outgoing(self):
+        if self.amount < 0:
+            return True
+        return False
+
     def __str__(self):
         if self.declined:
             declined = 'DECLINED '
@@ -208,6 +227,11 @@ class Merchant(models.Model):
     twitter_id = models.CharField(max_length=16, null=True, blank=True)
     foursquare_id = models.CharField(max_length=16, null=True, blank=True)
 
+    user_tags = TaggableManager(
+        through = 'TaggedMerchant',
+        blank = True
+    )
+
     @classmethod
     def update_from_monzo_data(cls, merchant):
         details = {
@@ -236,3 +260,10 @@ class Merchant(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class TaggedMerchant(TaggedItemBase):
+    content_object = models.ForeignKey(
+        'Merchant',
+        on_delete=models.CASCADE,
+    )
