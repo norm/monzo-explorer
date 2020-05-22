@@ -223,7 +223,7 @@ class Merchant(models.Model):
     )
     group_id = models.CharField(max_length=64, null=True, blank=True)
     name = models.CharField(max_length=128)
-    logo = models.URLField()
+    logo = models.URLField(null=True, blank=True)
     address = models.CharField(max_length=1024, null=True, blank=True)
     postcode = models.CharField(max_length=16, null=True, blank=True)
     latitude = models.DecimalField(max_digits=10, decimal_places=6, null=True, blank=True)
