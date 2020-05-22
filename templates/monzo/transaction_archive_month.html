@@ -88,6 +88,12 @@
           $declined.text('Show declined transactions');
       }
       });
+
+      var $reviewed = $('<button>Hide reviewed transactions</button>');
+      $reviewed.on('click', function() {
+        $('ul.transactions li:not(.unreviewed)').hide();
+      });
+      $('div.controls').append($reviewed);
     });
 
   </script>
