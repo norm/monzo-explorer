@@ -43,6 +43,12 @@ class Transaction(models.Model):
         null = True,
         blank = True,
     )
+    counterparty = models.ForeignKey(
+        'CounterParty',
+        on_delete = models.SET_NULL,
+        null = True,
+        blank = True,
+    )
     notes = models.CharField(
         max_length = 128,
         null = True,
@@ -157,6 +163,11 @@ class Transaction(models.Model):
         if transaction['merchant'] is not None:
             update['merchant'], _ = \
                 Merchant.update_from_monzo_data(transaction['merchant'])
+
+        if transaction['counterparty']:
+            update['counterparty'], _ = \
+                CounterParty.update_from_monzo_data(
+                    transaction['counterparty'])
 
         if transaction['settled'] != '':
             transaction['settled'] = text_to_timestamp(transaction['settled'])
@@ -275,3 +286,66 @@ class TaggedMerchant(TaggedItemBase):
         'Merchant',
         on_delete=models.CASCADE,
     )
+
+
+class CounterParty(models.Model):
+    id = models.CharField(
+        max_length = 64,
+        primary_key = True,
+    )
+    account_number = models.CharField(max_length=10)
+    sort_code = models.CharField(max_length=10)
+    name = models.CharField(max_length=64)
+    service_user_number = models.CharField(max_length=10)
+
+    @classmethod
+    def update_from_monzo_data(cls, counterparty):
+        if 'number' in counterparty:
+            # pre-banking monzo counterparty
+            party_id = counterparty['number']
+            details = {
+                'id': counterparty['number'],
+            }
+            if 'prefered_name' in counterparty:
+                counterparty['name'] = counterparty['prefered_name'],
+            else:
+                counterparty['name'] = counterparty['preferred_name'],
+        elif 'account_id' in counterparty:
+            # monzo counterparty
+            party_id = counterparty['account_id']
+            details = {
+                'id': counterparty['account_id'],
+                'name': counterparty['preferred_name'],
+            }
+        else:
+            # non-monzo counterparty
+            party_id = "%s%s" % (
+                counterparty['account_number'],
+                counterparty['sort_code'],
+            )
+            details = {
+                'id': party_id,
+                'account_number': counterparty['account_number'],
+                'sort_code': counterparty['sort_code'],
+                'name': counterparty['name'],
+            }
+            if 'service_user_number' in counterparty:
+                details['service_user_number'] = counterparty['service_user_number']
+
+        return cls.objects.update_or_create(
+            id = party_id,
+            defaults = details,
+        )
+
+    def __str__(self):
+        if self.sort_code:
+            return '%s (%s - %s)' % (
+                self.name,
+                self.sort_code,
+                self.account_number,
+            )
+        else:
+            return '%s (%s)' % (
+                self.name,
+                self.id,
+            )
