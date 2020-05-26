@@ -21,7 +21,9 @@ class SummarisedTransactionsMixin:
             'untagged': 0,
         }
         categories = {}
-        tagged = {}
+        tagged = {
+            'Not tagged': 0,
+        }
         subtagged = {}
         summary['declined'] = transaction_queryset.filter(declined=True).count()
         summary_queryset = transaction_queryset.exclude(
@@ -59,6 +61,8 @@ class SummarisedTransactionsMixin:
                                     subtagged[a.name][b.name] = amount
                                 else:
                                     subtagged[a.name][b.name] += amount
+                    else:
+                        tagged['Not tagged'] += amount
             else:
                 summary['total_in'] += transaction.amount
 

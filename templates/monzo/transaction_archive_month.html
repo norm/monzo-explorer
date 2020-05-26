@@ -23,7 +23,7 @@ Transactions for {{month|date:"F Y"}}
 
       <div>
         {% for category in transactions_summary.categorised|dictsortreversed:"total" %}
-          <dt class='category'>Category {{category.name}}</dt>
+          <dt class='category'>Categorised {{category.name}}</dt>
           <dd class='category'>£{{category.total|currency}}</dd>
         {% endfor %}
       </div>
@@ -32,7 +32,7 @@ Transactions for {{month|date:"F Y"}}
       {% for tag in transactions_summary.tagged %}
         <div>
           {% with name=tag.name total=tag.total %}
-            <dt class='tagged'>Tagged {{name}}</dt>
+            <dt class='tagged {% if name == "Not tagged" %}untagged{% endif %}'>{{name}}</dt>
             <dd class='tagged'>
               £{{total|currency}}
               {% if tag.subtags %}
