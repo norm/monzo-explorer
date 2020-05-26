@@ -12,23 +12,41 @@ Transactions for {{month|date:"F Y"}}
     <h2>Summary</h2>
 
     <dl>
-      <dt>Income</dt>
-      <dd class='income'>£{{transactions_summary.total_in|currency}}</dd>
-      <dt>Total outgoings</dt>
-      <dd class='outgoings'>£{{transactions_summary.total_out|currency}}</dd>
+      <div>
+        <dt>Income</dt>
+        <dd class='income'>£{{transactions_summary.total_in|currency}}</dd>
+        <dt>Total outgoings</dt>
+        <dd class='outgoings'>£{{transactions_summary.total_out|currency}}</dd>
+        <dt>Declined transactions</dt>
+        <dd>{{transactions_summary.declined}}</dd>
+      </div>
 
-      {% for category,value in transactions_summary.categorised.items %}
-        <dt>Category {{category}}</dt>
-        <dd>£{{value|currency}}</dd>
+      <div>
+        {% for category in transactions_summary.categorised|dictsortreversed:"total" %}
+          <dt class='category'>Category {{category.name}}</dt>
+          <dd class='category'>£{{category.total|currency}}</dd>
+        {% endfor %}
+      </div>
+    </dl>
+    <dl class='tagged'>
+      {% for tag in transactions_summary.tagged %}
+        <div>
+          {% with name=tag.name total=tag.total %}
+            <dt class='tagged'>Tagged {{name}}</dt>
+            <dd class='tagged'>
+              £{{total|currency}}
+              {% if tag.subtags %}
+                <dl>
+                {% for subtag in tag.subtags|dictsortreversed:"total" %}
+                  <dt>{{subtag.name}}</dt>
+                  <dd>£{{subtag.total|currency}}</dd>
+                {% endfor %}
+                </dl>
+              {% endif %}
+            </dd>
+          {% endwith %}
+        </div>
       {% endfor %}
-
-      {% for tag,value in transactions_summary.tagged.items %}
-        <dt>Tagged {{tag}}</dt>
-        <dd>£{{value|currency}}</dd>
-      {% endfor %}
-
-
-      <dt>{{transactions_summary.declined}} declined transactions</dt>
     </dl>
   </div>
 

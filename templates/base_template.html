@@ -17,8 +17,18 @@
       clear: both;
       display: table;
     }
-    #transactions_summary dd.outgoings {
+
+    #transactions_summary dl.tagged {
+      column-count: 3;
+    }
+    #transactions_summary dl > div {
       padding-bottom: 1em;
+      break-inside: avoid-column;
+    }
+
+    #transactions_summary dd.tagged dl {
+      margin: 0 0 1em;
+      padding: 0;
     }
     ul.transactions li.declined {
         font-style: italic;

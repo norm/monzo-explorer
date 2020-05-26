@@ -1,3 +1,5 @@
+import itertools
+
 from django.forms import models as model_forms
 from django.http import JsonResponse
 from django.views.generic import (
@@ -10,33 +12,80 @@ from apps.monzo.models import Merchant, Transaction
 
 
 class SummarisedTransactionsMixin:
-    def summarise_transactions(self, transactions):
+    def summarise_transactions(self, transaction_queryset):
         summary = {
             'total_in': 0,
             'total_out': 0,
-            'declined': 0,
-            'categorised': {},
-            'tagged': {},
+            'categorised': [],
+            'tagged': [],
             'untagged': 0,
         }
-        for transaction in transactions:
-            if transaction.declined:
-                summary['declined'] += 1
+        categories = {}
+        tagged = {}
+        subtagged = {}
+        summary['declined'] = transaction_queryset.filter(declined=True).count()
+        summary_queryset = transaction_queryset.exclude(
+            declined=True,
+            include_in_spending=True
+        )
+        for transaction in summary_queryset:
             if transaction.amount < 0:
+                amount = (-1 * transaction.amount)
                 if transaction.include_in_spending:
-                    summary['total_out'] += (-1 * transaction.amount)
+                    summary['total_out'] += amount
                     try:
-                        summary['categorised'][transaction.category] += (-1 * transaction.amount)
+                        categories[transaction.category] += amount
                     except KeyError:
-                        summary['categorised'][transaction.category] = (-1 * transaction.amount)
-                    for tag in transaction.tags():
-                        try:
-                            summary['tagged'][tag] += (-1 * transaction.amount)
-                        except KeyError:
-                            summary['tagged'][tag] = (-1 * transaction.amount)
+                        categories[transaction.category] = amount
+
+                    tags = transaction.tags()
+                    if tags:
+                        if len(tags) == 1:
+                            tag = tags[0]
+                            if tag.name not in tagged:
+                                tagged[tag.name] = amount
+                            else:
+                                tagged[tag.name] += amount
+                        else:
+                            for tag in tags:
+                                if tag.name not in tagged:
+                                    tagged[tag.name] = amount
+                                else:
+                                    tagged[tag.name] += amount
+                            for a,b in itertools.permutations(tags, 2):
+                                if a.name not in subtagged:
+                                    subtagged[a.name] = {}
+                                if b.name not in subtagged[a.name]:
+                                    subtagged[a.name][b.name] = amount
+                                else:
+                                    subtagged[a.name][b.name] += amount
             else:
                 summary['total_in'] += transaction.amount
 
+        for category in categories:
+            summary['categorised'].append({
+                'name': category,
+                'total': categories[category]
+            })
+        summary['tagged'] = []
+
+        # seen = {}
+        for tag,total in sorted(tagged.items(), key=lambda x: x[1], reverse=True):
+            subtags = []
+            if tag in subtagged:
+                for subtag in subtagged[tag]:
+                    # combo = '%s:%s' % tuple(sorted([tag, subtag]))
+                    # if combo not in seen:
+                        # seen[combo] = 1
+                    subtags.append({
+                        'name': subtag,
+                        'total': subtagged[tag][subtag],
+                    })
+            summary['tagged'].append({
+                'name': tag,
+                'total': total,
+                'subtags': subtags,
+            })
         return summary
 
 
