@@ -81,10 +81,12 @@ class SummarisedTransactionsMixin:
                     # combo = '%s:%s' % tuple(sorted([tag, subtag]))
                     # if combo not in seen:
                         # seen[combo] = 1
-                    subtags.append({
-                        'name': subtag,
-                        'total': subtagged[tag][subtag],
-                    })
+                    subtag_total = subtagged[tag][subtag]
+                    if subtag_total != total:
+                        subtags.append({
+                            'name': subtag,
+                            'total': subtag_total,
+                        })
             summary['tagged'].append({
                 'name': tag,
                 'total': total,
