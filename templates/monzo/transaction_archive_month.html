@@ -32,7 +32,7 @@ Transactions for {{month|date:"F Y"}}
       {% for tag in transactions_summary.tagged %}
         <div>
           {% with name=tag.name total=tag.total %}
-            <dt class='tagged {% if name == "Not tagged" %}untagged{% endif %}'>{{name}}</dt>
+            <dt class='tagged {% if name == "Not tagged" %}untagged{% endif %}'><span>{{name}}</span></dt>
             <dd class='tagged'>
               £{{total|currency}}
               {% if tag.subtags %}
@@ -68,7 +68,7 @@ Transactions for {{month|date:"F Y"}}
 
   <ul class='transactions'>
     {% for object in object_list %}
-      <li class='{% if object.declined %}declined{% endif %} {% if not object.user_reviewed %}unreviewed{% endif %}'>
+      <li class='{% if object.declined %}declined{% else %} {% if not object.user_reviewed %}unreviewed{% endif %} {% for tag in object.tags %}tagged_{{tag}} {% endfor %}{% endif %}'>
         <a href='{{object.get_absolute_url}}'>
           {{object}}
         </a>
@@ -130,6 +130,7 @@ Transactions for {{month|date:"F Y"}}
       var $reviewed = $('<button>Hide reviewed transactions</button>');
       $reviewed.on('click', function() {
         $('ul.transactions li:not(.unreviewed)').hide();
+        $('#transactions_summary dl.tagged > div > dt').trigger('recalculate');
       });
       $('div.controls').append($reviewed);
 
@@ -150,6 +151,44 @@ Transactions for {{month|date:"F Y"}}
           }
         });
       });
+
+      // make tags clickable to show/hide those transactions
+      $('#transactions_summary dl.tagged > div > dt').each(function() {
+        var selector = 'ul.transactions li.tagged_' + $(this).text();
+        var shown = true;
+        var $this = $(this);
+        var any_shown;
+        $this.on('click', function() {
+          if (shown) {
+            $(selector).slideUp('fast', function() {
+              $('#transactions_summary dl.tagged > div > dt').trigger('recalculate');
+              $('span', $this).css({"text-decoration": "line-through"});
+              shown = false;
+            });
+          }
+          else {
+            $(selector).slideDown('fast', function() {
+              $('#transactions_summary dl.tagged > div > dt').trigger('recalculate');
+              shown = true;
+              $('span', $this).css({"text-decoration": "none"});
+            });
+          }
+        });
+
+        $this.on('recalculate', function() {
+          any_shown = false;
+          $(selector).each(function() {
+            if($(this).is(':visible')) {
+              any_shown = true;
+            }
+          });
+          if (!any_shown) {
+            $('span', $this).css({"text-decoration": "line-through"});
+            shown = false;
+          }
+        });
+      });
+      $('#transactions_summary').addClass('enhanced');
     });
 
   </script>
